@@ -75,7 +75,7 @@ npm run fix
 
 ## アプリ構成
 
-![シーケンス図]()
+![シーケンス図](https://github.com/k-mizoguch1/lifestyle-home-search/blob/main/public/drawio/lifestyle-home-search-sequence.drawio.svg)
 
 ### 開発メンバー
 
