@@ -1,41 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ライフスタイル提案機能付き物件検索アプリ（仮称）
 
-## Getting Started
+## 使用技術
 
-First, run the development server:
+- フロントエンド
+  - [Next.js](https://nextjs.org/)
+  - [npm](https://www.npmjs.com/)
+  - [Node.js](https://nodejs.org/ja) v22.6.0
+- バックエンド
+  - [Nest.js](https://nestjs.com/)
+  - [PostgreSQL](https://www.postgresql.org/)
+- デザイン
+  - [Figma](https://www.figma.com/)
+- 言語
+  - [TypeScript](https://www.typescriptlang.org/)
+- コードフォーマット
+  - [ESLint](https://eslint.org/)
+  - [Prettier](https://prettier.io/)
+- CI/CD
+  - [GitHub Actions](https://github.com/features/actions)
+- テスト
+  - [Jest](https://jestjs.io/)
+  - [Playwright](https://playwright.dev/)
+- IDE
+  - [VSCode](https://code.visualstudio.com/download)
+
+## 事前準備
+
+各種ツールのインストール
+
+- [VSCode](https://code.visualstudio.com/download)
+- Git
+  - [windows](https://qiita.com/T-H9703EnAc/items/4fbe6593d42f9a844b1c)
+  - [mac](https://zenn.dev/mesgory/articles/948876ac1b7517)
+- Node.js
+  - [windows](https://qiita.com/echolimitless/items/83f8658cf855de04b9ce)
+  - macはHomebrewで
+- [Docker](https://docs.docker.com/get-started/get-docker/)
+
+Windowsユーザ
+
+- [wsl](https://qiita.com/zakoken/items/61141df6aeae9e3f8e36)
+  ※ WindowsユーザーがLinuxコマンドを使用する方法として、WSL2、Git Bash、Cygwin などの選択肢があります。本格的な開発環境が必要な場合は WSL2 を推奨しますが、基本的なLinuxコマンドを使うだけなら Git Bash でも十分です。
+
+## 開発手順
+
+1. リポジトリをクローン
+
+```bash
+git clone https://github.com/k-mizoguch1/lifestyle-home-search.git
+```
+
+※ 今後ここから先はDocker上で全て起動するように変更予定(時間が許せば)
+
+2. パッケージのインストール(フロント)
+
+```bash
+npm install
+```
+
+3. サーバーの起動(フロント)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000)で起動します．
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+コードフォーマッターを使用する
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint # Lintチェックのみ
+npm run fix
+```
 
-## Learn More
+## アプリ構成
 
-To learn more about Next.js, take a look at the following resources:
+![シーケンス図]()
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 開発メンバー
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-開発メンバー
-
-gody012
-　nakatari04
+- フロントエンド
+  - gody012
+  - nakatari04
+  - k-mizoguch1
+- バックエンド
+  - Tatsu821
