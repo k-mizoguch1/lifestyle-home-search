@@ -1,6 +1,6 @@
 type Props = {
-  loading: boolean;
-};
+  loading: boolean
+}
 
 export const Loading = ({ loading }: Props) => {
   if (loading)
@@ -11,7 +11,7 @@ export const Loading = ({ loading }: Props) => {
           <p className="font-weight text-[30px] text-white">Loading...</p>
         </div>
       </div>
-    );
+    )
 
-  return null;
-};
+  return null
+}
