@@ -78,7 +78,7 @@ npm run fix
 ![シーケンス図](https://github.com/k-mizoguch1/lifestyle-home-search/blob/main/public/drawio/lifestyle-home-search-sequence.drawio.svg)
 
 ### 開発メンバー
-
+チーム名:たぐちだぶち
 - フロントエンド
   - gody012
   - nakatari04
