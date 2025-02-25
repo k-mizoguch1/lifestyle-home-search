@@ -1,4 +1,4 @@
-type Layout =
+export type Layout =
   | 'ワンルーム'
   | '1K'
   | '1DK'
@@ -14,7 +14,7 @@ type Layout =
   | '4LDK'
   | '5K以上'
 
-type Building = 'マンション' | 'アパート' | '一戸建て・その他'
+export type Building = 'マンション' | 'アパート' | '一戸建て・その他'
 
 export type Home = {
   id: string
@@ -27,7 +27,7 @@ export type Home = {
   building: Building
 }
 
-type Year =
+export type Year =
   | '新築'
   | '1年以内'
   | '3年以内'

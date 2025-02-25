@@ -13,12 +13,14 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const [homes, setHomes] = useState<Home[]>([])
+  const [home, setHome] = useState<Home | null>(null)
 
   useEffect(() => {
     async function fetchData() {
       const response = await fetch('/api/home')
       const result = await response.json()
       setHomes(result)
+      setHome(result[0])
     }
 
     fetchData()
@@ -38,12 +40,16 @@ export default function Home() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1>物件情報一覧</h1>
-      <div>
-        <p>物件名</p>
-        <Button className="border rounded-lg bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
-          <Link href="/homes/1">物件詳細を見る</Link>
-        </Button>
-      </div>
+      {home ? (
+        <div>
+          <p>物件名:{home.name}</p>
+          <Button className="border rounded-lg bg-blue-500 text-white px-4 py-2 hover:bg-blue-600">
+            <Link href="/homes/1">物件詳細を見る</Link>
+          </Button>
+        </div>
+      ) : (
+        <p>物件情報がありません</p>
+      )}
     </main>
   )
 }
