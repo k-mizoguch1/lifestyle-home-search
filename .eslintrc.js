@@ -24,5 +24,6 @@ module.exports = {
     '@typescript-eslint/no-unsafe-function-type': 'warn',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-empty-object-type': 'off',
+    'linebreak-style': ['error', 'unix'],
   },
 }
