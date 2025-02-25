@@ -1,101 +1,155 @@
-import Image from 'next/image'
+'use client'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from '@/_shadcn/ui/breadcrumb'
+import { Button } from '@/_shadcn/ui/button'
+import { Label } from '@/_shadcn/ui/label'
+import Link from 'next/link'
+
+const mainCities = ['千代田区', '中央区', '港区', '新宿区', '文京区', '渋谷区']
+const cities = [
+  '台東区',
+  '墨田区',
+  '江東区',
+  '品川区',
+  '目黒区',
+  '大田区',
+  '世田谷区',
+  '中野区',
+  '杉並区',
+  '豊島区',
+  '北区',
+  '荒川区',
+  '板橋区',
+  '練馬区',
+  '足立区',
+  '葛飾区',
+  '江戸川区',
+]
+const tokas = [
+  '八王子市',
+  '立川市',
+  '武蔵野市',
+  '三鷹市',
+  '青梅市',
+  '府中市',
+  '昭島市',
+  '調布市',
+  '町田市',
+  '小金井市',
+  '小平市',
+  '日野市',
+  '東村山市',
+  '国分寺市',
+  '国立市',
+  '福生市',
+  '狛江市',
+  '東大和市',
+  '清瀬市',
+  '東久留米市',
+  '武蔵村山市',
+  '多摩市',
+  '稲城市',
+  '羽村市',
+  'あきる野市',
+  '西東京市',
+  '瑞穂町',
+  '日の出町',
+  '檜原村',
+  '奥多摩町',
+  '大島町',
+  '利島村',
+  '新島村',
+  '神津島村',
+  '三宅村',
+  '御蔵島村',
+  '八丈町',
+  '青ヶ島村',
+  '小笠原村',
+]
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main>
+      <Breadcrumb className="my-3">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">物件検索</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="p-10 text-center text-6xl font-bold">
+        グッとくるお部屋に出会おう
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div>
+        <p className="text-xl font-bold bg-blue-300 px-3">東京都-都心部</p>
+        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+          {mainCities.map((mainCity, idx) => (
+            <div key={idx} className="items-top flex space-x-2">
+              <input id={idx.toString()} type="checkbox" />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor={idx.toString()}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {mainCity}
+                </Label>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+
+      <div>
+        <p className="text-xl font-bold bg-blue-300 px-3">東京都-23区</p>
+        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+          {cities.map((city, idx) => (
+            <div key={idx} className="items-top flex space-x-2">
+              <input id={idx.toString()} type="checkbox" />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor={idx.toString()}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {city}
+                </Label>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xl font-bold bg-blue-300 px-3">東京都-都下</p>
+        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+          {tokas.map((toka, idx) => (
+            <div key={idx} className="items-top flex space-x-2">
+              <input id={idx.toString()} type="checkbox" />
+              <div className="grid gap-1.5 leading-none">
+                <Label
+                  htmlFor={idx.toString()}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {toka}
+                </Label>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="text-center my-10">
+        <Button
+          className="border rounded-lg border-black bg-blue-500 hover:bg-blue-600 text-white"
+          variant={'outline'}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Link href={'/homes'}>検索</Link>
+        </Button>
+      </div>
+    </main>
   )
 }
