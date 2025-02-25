@@ -83,5 +83,6 @@ npm run fix
   - gody012
   - nakatari04
   - k-mizoguch1
+  - rikuto0507
 - バックエンド
   - Tatsu821
