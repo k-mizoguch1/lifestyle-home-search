@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
   ]
 
   return (
-    <footer className="bg-[#043873] text-white py-6 mt-10 sticky bottom-0 w-full">
+    <footer className="bg-[#043873] text-white py-6 mt-10 w-full">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6">
         <p className="text-sm">
           &copy; {new Date().getFullYear()} MyWebsite. All rights reserved.
