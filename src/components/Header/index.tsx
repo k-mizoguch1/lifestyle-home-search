@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export function Header() {
   return (
-    <header className="bg-[#043873] shadow-md py-4 px-6 flex justify-between items-center">
+    <header className="bg-[#043873] shadow-md py-4 px-6 flex justify-between items-center sticky top-0">
       <Link href="/">
         <h1 className="text-2xl font-bold text-gray-800 cursor-pointer flex gap-5">
           <Image src="/icon.svg" alt="たぐっとホーム" width={40} height={40} />

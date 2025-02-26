@@ -24,6 +24,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_shadcn/ui/tabs'
 import type { Building, Layout, Year } from '@/model/home'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -106,7 +107,6 @@ const layouts: Layout[] = [
   '5K以上',
 ]
 const years: Year[] = [
-  '新築',
   '1年以内',
   '3年以内',
   '5年以内',
@@ -173,9 +173,7 @@ const rents: string[] = [
 ]
 
 const searchSchema = z.object({
-  selectedCities: z
-    .array(z.string())
-    .min(1, '少なくとも1つのエリアを選択してください'),
+  selectedCities: z.array(z.string()),
   minRent: z.string(),
   maxRent: z.string(),
   layouts: z.array(z.string()),
@@ -189,14 +187,16 @@ export default function Home() {
     defaultValues: {
       selectedCities: [],
       minRent: '0.0',
-      maxRent: '30.0',
+      maxRent: '100.0',
       layouts: [],
       year: '指定しない',
       buildings: [],
     },
   })
 
-  function onSubmit(values: {
+  const router = useRouter()
+
+  async function onSubmit(values: {
     minRent: string
     maxRent: string
     year: string
@@ -204,7 +204,16 @@ export default function Home() {
     layouts: string[]
     buildings: string[]
   }) {
-    console.log('検索条件:', values)
+    const params = new URLSearchParams(
+      Object.entries({
+        ...values,
+        layouts: values.layouts.join(','),
+        buildings: values.buildings.join(','),
+        selectedCities: values.selectedCities.join(','),
+      }).filter(([_, v]) => v !== undefined && v !== ''),
+    ).toString()
+
+    router.push(`/homes?${params}`)
   }
 
   return (
@@ -222,7 +231,7 @@ export default function Home() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => onSubmit(form.getValues()))}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Tabs defaultValue="area" className="">
             <TabsList className="my-3">
               <TabsTrigger
@@ -534,9 +543,7 @@ export default function Home() {
               variant={'outline'}
               type="submit"
             >
-              {/* <Link href={'/homes'}> */}
               検索
-              {/* </Link> */}
             </Button>
           </div>
         </form>
