@@ -14,7 +14,9 @@ export function Homes() {
     async function fetchData() {
       const res = await fetch(`/api/homes?${searchParams.toString()}`)
       const resJson = await res.json()
-      setHomes(resJson)
+      if (res.status === 200) {
+        setHomes(resJson)
+      }
     }
 
     fetchData()

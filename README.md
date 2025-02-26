@@ -3,24 +3,33 @@
 ## 使用技術
 
 - フロントエンド
+
   - [Next.js](https://nextjs.org/)
   - [npm](https://www.npmjs.com/)
   - [Node.js](https://nodejs.org/ja) v22.6.0
+
 - バックエンド
+
   - [Nest.js](https://nestjs.com/)
   - [PostgreSQL](https://www.postgresql.org/)
+
 - デザイン
+
   - [Figma](https://www.figma.com/)
+
 - 言語
+
   - [TypeScript](https://www.typescriptlang.org/)
+
 - コードフォーマット
+
   - [ESLint](https://eslint.org/)
   - [Prettier](https://prettier.io/)
+
 - CI/CD
+
   - [GitHub Actions](https://github.com/features/actions)
-- テスト
-  - [Jest](https://jestjs.io/)
-  - [Playwright](https://playwright.dev/)
+
 - IDE
   - [VSCode](https://code.visualstudio.com/download)
 
