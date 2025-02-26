@@ -6,7 +6,13 @@ import {
   BreadcrumbList,
 } from '@/_shadcn/ui/breadcrumb'
 import { Button } from '@/_shadcn/ui/button'
-import { Label } from '@/_shadcn/ui/label'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/_shadcn/ui/form'
 import { ScrollArea } from '@/_shadcn/ui/scroll-area'
 import {
   Select,
@@ -17,7 +23,9 @@ import {
 } from '@/_shadcn/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_shadcn/ui/tabs'
 import type { Building, Layout, Year } from '@/model/home'
-import Link from 'next/link'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const mainCities = ['千代田区', '中央区', '港区', '新宿区', '文京区', '渋谷区']
 const cities = [
@@ -80,7 +88,6 @@ const tokas = [
   '青ヶ島村',
   '小笠原村',
 ]
-
 const buildings: Building[] = ['マンション', 'アパート', '一戸建て・その他']
 const layouts: Layout[] = [
   'ワンルーム',
@@ -165,7 +172,41 @@ const rents: string[] = [
   '100.0',
 ]
 
+const searchSchema = z.object({
+  selectedCities: z
+    .array(z.string())
+    .min(1, '少なくとも1つのエリアを選択してください'),
+  minRent: z.string(),
+  maxRent: z.string(),
+  layouts: z.array(z.string()),
+  year: z.string(),
+  buildings: z.array(z.string()),
+})
+
 export default function Home() {
+  const form = useForm({
+    resolver: zodResolver(searchSchema),
+    defaultValues: {
+      selectedCities: [],
+      minRent: '0.0',
+      maxRent: '30.0',
+      layouts: [],
+      year: '指定しない',
+      buildings: [],
+    },
+  })
+
+  function onSubmit(values: {
+    minRent: string
+    maxRent: string
+    year: string
+    selectedCities: string[]
+    layouts: string[]
+    buildings: string[]
+  }) {
+    console.log('検索条件:', values)
+  }
+
   return (
     <main>
       <Breadcrumb className="my-3">
@@ -180,198 +221,326 @@ export default function Home() {
         グッとくるお部屋に出会おう
       </div>
 
-      <Tabs defaultValue="area" className="">
-        <TabsList className="my-3">
-          <TabsTrigger
-            value="area"
-            className="text-2xl data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-          >
-            エリア
-          </TabsTrigger>
-          <TabsTrigger
-            value="others"
-            className="text-2xl data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-          >
-            その他条件
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="area">
-          <div>
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">
-                東京都-都心部
-              </p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {mainCities.map((mainCity, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={mainCity} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={mainCity}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {mainCity}
-                      </Label>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(() => onSubmit(form.getValues()))}>
+          <Tabs defaultValue="area" className="">
+            <TabsList className="my-3">
+              <TabsTrigger
+                value="area"
+                className="text-2xl data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+              >
+                エリア
+              </TabsTrigger>
+              <TabsTrigger
+                value="others"
+                className="text-2xl data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+              >
+                その他条件
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="area" className="h-[600px]">
+              <FormField
+                control={form.control}
+                name="selectedCities"
+                render={({ field }) => (
+                  <>
+                    <div>
+                      <div>
+                        <p className="text-xl font-bold bg-blue-300 px-3">
+                          東京都-都心部
+                        </p>
+                        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                          {mainCities.map((mainCity, idx) => (
+                            <FormItem key={idx}>
+                              <div className="items-top flex space-x-2">
+                                <FormControl>
+                                  <input
+                                    id={mainCity}
+                                    type="checkbox"
+                                    checked={field.value.includes(mainCity)}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        e.target.checked
+                                          ? [...field.value, mainCity]
+                                          : field.value.filter(
+                                              (v) => v !== mainCity,
+                                            ),
+                                      )
+                                    }
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={mainCity}>
+                                  {mainCity}
+                                </FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </div>
+                      </div>
 
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">東京都-23区</p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {cities.map((city, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={city} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={city}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {city}
-                      </Label>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                      <div>
+                        <p className="text-xl font-bold bg-blue-300 px-3">
+                          東京都-23区
+                        </p>
+                        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                          {cities.map((city, idx) => (
+                            <FormItem key={idx}>
+                              <div className="items-top flex space-x-2">
+                                <FormControl>
+                                  <input
+                                    id={city}
+                                    type="checkbox"
+                                    checked={field.value.includes(city)}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        e.target.checked
+                                          ? [...field.value, city]
+                                          : field.value.filter(
+                                              (v) => v !== city,
+                                            ),
+                                      )
+                                    }
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={city}>{city}</FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </div>
+                      </div>
 
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">東京都-都下</p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {tokas.map((toka, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={toka} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={toka}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {toka}
-                      </Label>
+                      <div>
+                        <p className="text-xl font-bold bg-blue-300 px-3">
+                          東京都-都下
+                        </p>
+                        <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                          {tokas.map((toka, idx) => (
+                            <FormItem key={idx}>
+                              <div
+                                key={idx}
+                                className="items-top flex space-x-2"
+                              >
+                                <FormControl>
+                                  <input
+                                    id={toka}
+                                    type="checkbox"
+                                    checked={field.value.includes(toka)}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        e.target.checked
+                                          ? [...field.value, toka]
+                                          : field.value.filter(
+                                              (v) => v !== toka,
+                                            ),
+                                      )
+                                    }
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={toka}>{toka}</FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="others">
-          <div>
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">賃料</p>
-              <div className="flex  mx-10 my-5">
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="下限なし" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-60 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg rounded-md">
-                    <ScrollArea className="h-60">
-                      {rents.map((rent, idx) => (
-                        <SelectItem
-                          key={idx}
-                          value={rent}
-                          className="hover:bg-blue-100 transition-colors duration-200 ease-in-out"
+                  </>
+                )}
+              />
+            </TabsContent>
+            <TabsContent value="others" className="h-[600px]">
+              <div>
+                <div>
+                  <p className="text-xl font-bold bg-blue-300 px-3">賃料</p>
+                  <div className="flex  mx-10 my-5">
+                    <FormField
+                      control={form.control}
+                      name="minRent"
+                      render={({ field }) => (
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                         >
-                          {rent + '万以上'}
-                        </SelectItem>
-                      ))}
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="下限なし" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg rounded-md">
+                            <ScrollArea className="h-60">
+                              {rents.map((rent, idx) => (
+                                <SelectItem
+                                  key={idx}
+                                  value={rent}
+                                  className="hover:bg-blue-100 transition-colors duration-200 ease-in-out"
+                                >
+                                  {rent + '万以上'}
+                                </SelectItem>
+                              ))}
+                            </ScrollArea>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
 
-                <div className="flex items-center justify-center">
-                  <span className="mx-3 align-middle">〜</span>
+                    <div className="flex items-center justify-center">
+                      <span className="mx-3 align-middle">〜</span>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="maxRent"
+                      render={({ field }) => (
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="上限なし" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg rounded-md">
+                            <ScrollArea className="h-60">
+                              {rents.map((rent, idx) => (
+                                <SelectItem
+                                  key={idx}
+                                  value={rent}
+                                  className="hover:bg-blue-100 transition-colors duration-200 ease-in-out"
+                                >
+                                  {rent + '万以下'}
+                                </SelectItem>
+                              ))}
+                            </ScrollArea>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                  </div>
                 </div>
-                <Select>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="上限なし" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-60 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100 shadow-lg rounded-md">
-                    <ScrollArea className="h-60">
-                      {rents.map((rent, idx) => (
-                        <SelectItem
-                          key={idx}
-                          value={rent}
-                          className="hover:bg-blue-100 transition-colors duration-200 ease-in-out"
-                        >
-                          {rent + '万以下'}
-                        </SelectItem>
-                      ))}
-                    </ScrollArea>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">築年数</p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {years.map((year, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={year} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={year}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {year}
-                      </Label>
-                    </div>
+                <div>
+                  <p className="text-xl font-bold bg-blue-300 px-3">築年数</p>
+                  <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                    <FormField
+                      control={form.control}
+                      name="year"
+                      render={({ field }) => (
+                        <>
+                          {years.map((year, idx) => (
+                            <FormItem key={idx}>
+                              <div className="items-top flex space-x-2">
+                                <FormControl>
+                                  <input
+                                    id={year}
+                                    name="year"
+                                    type="radio"
+                                    checked={field.value === year}
+                                    onChange={() => field.onChange(year)}
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={year}>{year}</FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </>
+                      )}
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">間取り</p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {layouts.map((layout, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={layout} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={layout}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {layout}
-                      </Label>
-                    </div>
+                <div>
+                  <p className="text-xl font-bold bg-blue-300 px-3">間取り</p>
+                  <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                    <FormField
+                      control={form.control}
+                      name="layouts"
+                      render={({ field }) => (
+                        <>
+                          {layouts.map((layout, idx) => (
+                            <FormItem key={idx}>
+                              <div
+                                key={idx}
+                                className="items-top flex space-x-2"
+                              >
+                                <FormControl>
+                                  <input
+                                    id={layout}
+                                    type="checkbox"
+                                    checked={field.value.includes(layout)}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        e.target.checked
+                                          ? [...field.value, layout]
+                                          : field.value.filter(
+                                              (v) => v !== layout,
+                                            ),
+                                      )
+                                    }
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={layout}>{layout}</FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </>
+                      )}
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            <div>
-              <p className="text-xl font-bold bg-blue-300 px-3">建物種別</p>
-              <div className="grid gap-2 grid-cols-4 mx-10 my-5">
-                {buildings.map((building, idx) => (
-                  <div key={idx} className="items-top flex space-x-2">
-                    <input id={building} type="checkbox" />
-                    <div className="grid gap-1.5 leading-none">
-                      <Label
-                        htmlFor={building}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {building}
-                      </Label>
-                    </div>
+                <div>
+                  <p className="text-xl font-bold bg-blue-300 px-3">建物種別</p>
+                  <div className="grid gap-2 grid-cols-4 mx-10 my-5">
+                    <FormField
+                      control={form.control}
+                      name="buildings"
+                      render={({ field }) => (
+                        <>
+                          {buildings.map((building, idx) => (
+                            <FormItem key={idx}>
+                              <div
+                                key={idx}
+                                className="items-top flex space-x-2"
+                              >
+                                <FormControl>
+                                  <input
+                                    id={building}
+                                    type="checkbox"
+                                    checked={field.value.includes(building)}
+                                    onChange={(e) =>
+                                      field.onChange(
+                                        e.target.checked
+                                          ? [...field.value, building]
+                                          : field.value.filter(
+                                              (v) => v !== building,
+                                            ),
+                                      )
+                                    }
+                                  />
+                                </FormControl>
+                                <FormLabel htmlFor={building}>
+                                  {building}
+                                </FormLabel>
+                              </div>
+                            </FormItem>
+                          ))}
+                        </>
+                      )}
+                    />
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            </TabsContent>
+          </Tabs>
+
+          <div className="text-center my-10">
+            <Button
+              className="border rounded-lg border-black bg-blue-500 hover:bg-blue-600 text-white"
+              variant={'outline'}
+              type="submit"
+            >
+              {/* <Link href={'/homes'}> */}
+              検索
+              {/* </Link> */}
+            </Button>
           </div>
-        </TabsContent>
-      </Tabs>
-
-      <div className="text-center my-10">
-        <Button
-          className="border rounded-lg border-black bg-blue-500 hover:bg-blue-600 text-white"
-          variant={'outline'}
-        >
-          <Link href={'/homes'}>検索</Link>
-        </Button>
-      </div>
+        </form>
+      </Form>
     </main>
   )
 }
