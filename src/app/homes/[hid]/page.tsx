@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/_shadcn/ui/breadcrumb'
-import { HomeById } from '@/components/HomeById'
+import { FetchContainer } from '@/components/FetchContainer'
 import { Loading } from '@/components/Loading'
 import { Suspense } from 'react'
 
@@ -35,7 +35,7 @@ export default async function Home({
 
       <h1>物件ID:{hid}の詳細ページ</h1>
       <Suspense fallback={<Loading loading={true} />}>
-        <HomeById id={hid} />
+        <FetchContainer id={hid} />
       </Suspense>
     </main>
   )

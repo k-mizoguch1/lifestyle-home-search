@@ -8,55 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/_shadcn/ui/table'
-import type { Home } from '@/model/home'
-import { useEffect, useState } from 'react'
+import { Home } from '@/model/home'
 
 type Props = {
-  id: string
+  home: Home | null
 }
-export function HomeById({ id }: Props) {
-  const [home, setHome] = useState<Home | null>(null)
-  const [aiResponse, setAiResponse] = useState<string>('')
-  
-  useEffect(() => {
-    setAiResponse('')
 
-    async function fetchHomeDetails() {
-      const response = await fetch(`/api/homes/${id}`)
-      if (!response.body) {
-        return
-      }
-
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-
-      let result = ''
-      let isHomeReceived = false
-
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) break
-
-        const chunk = decoder.decode(value, { stream: true })
-
-        if (!isHomeReceived) {
-          // 最初のデータを `home` の情報としてセット
-          const match = chunk.match(/data: (.+)/)
-          if (match) {
-            setHome(JSON.parse(match[1]))
-            isHomeReceived = true
-          }
-        } else {
-          // OpenAI のレスポンスをリアルタイムにセット
-          result += chunk
-          setAiResponse((prev) => prev + chunk)
-        }
-      }
-    }
-
-    fetchHomeDetails()
-  }, [id])
-
+export function HomeDescription({ home }: Props) {
   // useEffect(() => {
   //   async function fetchHome() {
   //     try {
@@ -107,7 +65,6 @@ export function HomeById({ id }: Props) {
           </TableBody>
         )}
       </Table>
-      <p className="mt-4 whitespace-pre-line">{aiResponse}</p>
     </>
   )
 }

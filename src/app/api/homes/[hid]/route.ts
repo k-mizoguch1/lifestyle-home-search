@@ -3,6 +3,11 @@ import type { Home } from '@/model/home'
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
+export type GetResponseBody = {
+  home: Home
+  aiResponse: string
+}
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ hid: string }> },
@@ -27,7 +32,7 @@ export async function GET(
   try {
     const apiKey = process.env.OPENAI_API_KEY
     const openAIClient = new OpenAI({ apiKey: apiKey })
-    const stream = await openAIClient.chat.completions.create({
+    const openaiRes = await openAIClient.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
@@ -45,42 +50,14 @@ export async function GET(
           - 築年数: ${home.year}年
           - 建物種別: ${home.building}
 
-          この家に住むと、どのようなライフスタイルが実現できますか？`,
+          この家に住むと、どのようなライフスタイルが実現できますか？周辺のスーパーや公園、交通機関などの情報も含めて教えてください。`,
         },
       ],
-      stream: true, // ストリーミング有効化
     })
 
-    // ストリーミングを送信するための ReadableStream
-    const encoder = new TextEncoder()
-    const homeJson = JSON.stringify({ home })
-    const streamWithHeader = new ReadableStream({
-      start(controller) {
-        // home のデータを最初に送信
-        controller.enqueue(encoder.encode(`data: ${homeJson}\n\n`))
+    const aiResponse = openaiRes.choices[0].message.content
 
-        // OpenAI のレスポンスを流す
-        const reader = stream.toReadableStream().getReader()
-        async function push() {
-          const { done, value } = await reader.read()
-          if (done) {
-            controller.close()
-            return
-          }
-          controller.enqueue(value)
-          push()
-        }
-        push()
-      },
-    })
-
-    return new Response(streamWithHeader, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
-      },
-    })
+    return NextResponse.json({ home, aiResponse }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
