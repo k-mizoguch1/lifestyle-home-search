@@ -49,6 +49,7 @@ export const searchNearbyPlaces = async (latitude: number, longitude: number, ra
   const data = {
     includedTypes: PLACE_TYPES, // 指定した施設タイプ
     maxResultCount: maxResults,
+    languageCode: "ja", // 日本語で取得
     locationRestriction: {
       circle: {
         center: { latitude, longitude },
