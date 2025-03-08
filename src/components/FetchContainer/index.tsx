@@ -46,7 +46,7 @@ export function FetchContainer({ id }: Props) {
       ) : (
         <>
           <HomeDescription home={home} placesData={placesApiResponse} />
-          <AiAdvise aiResponse={aiResponse} />
+          <AiAdvise aiResponse={JSON.parse(aiResponse)} />
         </>
       )}
     </>

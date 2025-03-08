@@ -107,10 +107,24 @@ export async function GET(
     const openaiRes = await openAIClient.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
+        // {
+        //   role: 'system',
+        //   content:
+        //     'あなたは不動産コンサルタントです。以下の家に住むことで実現できるライフスタイルを説明してください。',
+        // },
         {
           role: 'system',
-          content:
-            'あなたは不動産コンサルタントです。以下の家に住むことで実現できるライフスタイルを説明してください。',
+          content: `
+            あなたは不動産コンサルタントです。以下の家に住むことで実現できるライフスタイルを説明してください。
+            必ず以下のJSON形式で出力してください:
+            {
+              "summary": "ライフスタイルの概要",
+              "advantages": ["利点1", "利点2", "利点3"],
+              "disadvantages": ["欠点1", "欠点2"],
+              "recommendation": "この家が向いている人の特徴"
+            }
+            JSONの構造を厳密に守り、他の形式で出力しないでください。
+          `,
         },
         {
           role: 'user',
@@ -135,6 +149,43 @@ export async function GET(
             この家に住むと、どのようなライフスタイルが実現できますか？周辺のスーパーや公園、交通機関などの情報も含めて教えてください。`,
         },
       ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "lifestyle_summary",
+          description: "物件に住むことで実現できるライフスタイルの説明。",
+          schema: {
+            type: "object",
+            properties: {
+              summary: {
+                type: "string",
+                description: "ライフスタイルの概要。",
+              },
+              advantages: {
+                type: "array",
+                description: "この物件の主な利点。",
+                items: {
+                  type: "string",
+                },
+              },
+              disadvantages: {
+                type: "array",
+                description: "この物件の欠点。",
+                items: {
+                  type: "string",
+                },
+              },
+              suitable_for: {
+                type: "string",
+                description: "この物件が適している人の特徴。",
+              },
+            },
+            required: ["summary", "advantages", "disadvantages", "suitable_for"],
+            additionalProperties: false,
+          },
+          strict: true,
+        },
+      },
     })
 
     const aiResponse = openaiRes.choices[0].message.content
