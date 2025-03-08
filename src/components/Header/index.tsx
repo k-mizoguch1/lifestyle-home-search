@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Image from 'next/image'
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,8 +24,9 @@ export function Header() {
 
   return (
     <header className="bg-[#043873] py-4 px-6 flex justify-between items-center relative">
-      <Link href="/home">
+      <Link href="/">
         <div className="flex items-center gap-2 cursor-pointer">
+          <Image src="/icon.svg" alt="たぐっとホーム" width={40} height={40} />
           <p className="text-white text-lg">たぐっとホーム</p>
         </div>
       </Link>
