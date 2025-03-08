@@ -2,11 +2,24 @@
 import type { Home } from '@/model/home'
 import { NextResponse } from 'next/server'
 import { OpenAI } from 'openai'
+import {getGeocode, searchNearbyPlaces} from '@/lib/gcpApi'
 
 export type GetResponseBody = {
   home: Home
+  placesData: Record<string, string[]>
   aiResponse: string
 }
+
+const placesData: Record<string, string[]> = {
+  supermarket: [],
+  shopping_mall: [],
+  gym: [],
+  drugstore: [],
+  restaurant: [],
+  park: [],
+  hotel: [],
+  school: [],
+};
 
 export async function GET(
   req: Request,
@@ -58,6 +71,37 @@ export async function GET(
   }
 
   try {
+    const location = await getGeocode(home.location)
+    console.log("location", location)
+    if (location) {
+      const nearbyPlaces = await searchNearbyPlaces(location.lat, location.lng);
+      console.log(nearbyPlaces);
+      // 各カテゴリーのデータを施設名のリストに変換
+      Object.entries(nearbyPlaces).forEach(([key, places]) => {
+        if (key in placesData) {
+          placesData[key] = places.map(place => place.name);
+        }
+      });
+      console.log(placesData);
+    }
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json(
+      { error: 'Failed to get nearby places.' },
+      { status: 500 },
+    )
+  }
+
+  try {
+    const supermarkets = placesData.supermarket.length > 0 ? placesData.supermarket.join(', ') : 'なし'
+    const shoppingMalls = placesData.shopping_mall.length > 0 ? placesData.shopping_mall.join(', ') : 'なし'
+    const gyms = placesData.gym.length > 0 ? placesData.gym.join(', ') : 'なし'
+    const drugstores = placesData.drugstore.length > 0 ? placesData.drugstore.join(', ') : 'なし'
+    const restaurants = placesData.restaurant.length > 0 ? placesData.restaurant.join(', ') : 'なし'
+    const parks = placesData.park.length > 0 ? placesData.park.join(', ') : 'なし'
+    const hotels = placesData.hotel.length > 0 ? placesData.hotel.join(', ') : 'なし'
+    const schools = placesData.school.length > 0 ? placesData.school.join(', ') : 'なし'
+
     const apiKey = process.env.OPENAI_API_KEY
     const openAIClient = new OpenAI({ apiKey: apiKey })
     const openaiRes = await openAIClient.chat.completions.create({
@@ -78,6 +122,16 @@ export async function GET(
             - 築年数: ${home.year}年
             - 建物種別: ${home.building}
 
+            周辺施設:\n
+            - スーパー: ${supermarkets}
+            - ショッピングモール: ${shoppingMalls}
+            - ジム: ${gyms}
+            - 薬局: ${drugstores}
+            - レストラン: ${restaurants}
+            - 公園: ${parks}
+            - ホテル: ${hotels}
+            - 学校: ${schools}
+
             この家に住むと、どのようなライフスタイルが実現できますか？周辺のスーパーや公園、交通機関などの情報も含めて教えてください。`,
         },
       ],
@@ -85,7 +139,7 @@ export async function GET(
 
     const aiResponse = openaiRes.choices[0].message.content
 
-    return NextResponse.json({ home, aiResponse }, { status: 200 })
+    return NextResponse.json({ home, aiResponse, placesData }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
