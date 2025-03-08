@@ -50,7 +50,7 @@ export function HomeDescription({ home }: Props) {
           <TableBody>
             <TableRow key={home.id}>
               <TableCell>{home.name}</TableCell>
-              <TableCell>{home.prefecture + home.city}</TableCell>
+              <TableCell>{home.location}</TableCell>
               <TableCell>{home.rent}</TableCell>
               <TableCell>{home.layout}</TableCell>
               <TableCell>{home.year}</TableCell>

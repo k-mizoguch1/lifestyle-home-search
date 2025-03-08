@@ -6,7 +6,7 @@ import Image from 'next/image'
 type Props = {
   home: Pick<
     Home,
-    'name' | 'rent' | 'year' | 'prefecture' | 'city' | 'layout' | 'building'
+    'name' | 'rent' | 'year' | 'prefecture' | 'city' | 'layout' | 'building' | 'photo_url' | 'location' | 'heights' | 'area' | 'admin' | 'deposit' | 'station_list' | 'thumbnails'
   >
 }
 
@@ -18,7 +18,13 @@ export function HomeCard({ home }: Props) {
       </CardHeader>
       <CardContent className="">
         <div className="flex gap-10">
-          <Image alt="物件外観" src={'/icon.svg'} width={100} height={100} />
+          <Image 
+            alt="物件外観" 
+            src={home.photo_url} 
+            width={200} 
+            height={200}
+            layout="intrinsic"
+          />
           <Table className="bg-white border border-gray-300">
             <TableBody>
               <TableRow>
