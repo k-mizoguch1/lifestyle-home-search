@@ -34,37 +34,64 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-96">
-      <h2 className="text-xl font-bold mb-4">ログイン</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleLogin}>
-        <div className="mb-4">
-          <label className="block text-gray-700">メールアドレス</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-800 to-purple-800">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
+        <h2 className="text-2xl font-bold text-center text-blue-900 mb-6">ログイン</h2>
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-blue-900">メールアドレス or たぐっとID</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-blue-900">パスワード</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-purple-800 transition-all"
+          >
+            ログイン
+          </button>
+        </form>
+
+        {/* 仕切り線 */}
+        <div className="mt-6 border-t border-gray-300"></div>
+
+        {/* パスワードリセット */}
+        <div className="mt-4 text-center">
+          <a href="/reset-password" className="text-blue-900 hover:underline">
+            パスワードを忘れた方はこちら
+          </a>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">パスワード</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
-          />
+
+        {/* 新規入会 */}
+        <div className="mt-2 text-center">
+                <a href="/new-application" className="text-blue-900 hover:underline">
+                    初めてご利用の方（アカウント作成）
+                </a>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          ログイン
-        </button>
-      </form>
+
+        {/* 問い合わせ */}
+        <div className="mt-2 text-center">
+          <a href="/contact-support" className="text-blue-900 hover:underline">
+            その他ログインに関する問い合わせ
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
