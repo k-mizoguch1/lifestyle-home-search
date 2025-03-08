@@ -193,12 +193,15 @@ export default function Home() {
     const params = new URLSearchParams(
       Object.entries({
         ...values,
+        min_rent: (parseInt(values.min_rent)*10000).toString(),
+        max_rent: (parseInt(values.max_rent)*10000).toString(),
+        year: values.year === '指定しない' ? '' : parseInt(values.year).toString(),
         layouts: values.layouts.join(','),
         buildings: values.buildings.join(','),
         cities: values.cities.join(','),
       }).filter(([_, v]) => v !== undefined && v !== ''),
     ).toString()
-
+    console.log(params, values.year);
     router.push(`/homes?${params}`)
   }
 

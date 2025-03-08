@@ -25,6 +25,14 @@ export async function parseCsv(): Promise<Home[]> {
         layout: row[5] as Layout,
         year: Number(row[6]) || 0,
         building: row[7] as Building,
+        photo_url: "",
+        location: "" ,
+        heights: 0,
+        area: 0,
+        admin: 0,
+        deposit: 0,
+        station_list: "",
+        thumbnails: "",
       }
     })
 

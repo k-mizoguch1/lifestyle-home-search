@@ -24,7 +24,16 @@ export type Home = {
   rent: number
   layout: Layout
   year: number
-  building: Building
+  building: Building,
+  // add 'location', 'heights', 'area', 'admin', 'deposit', 'photo_url', "station_list", "thumbnails"
+  location: string,
+  heights: number,
+  area: number,
+  admin: number,
+  deposit: number,
+  photo_url: string,
+  station_list: string,
+  thumbnails: string
 }
 
 export type Year =
