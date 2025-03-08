@@ -137,6 +137,7 @@ export async function GET(
             - 建物種別: ${home.building}
 
             周辺施設:\n
+            - 駅: ${home.station_list}
             - スーパー: ${supermarkets}
             - ショッピングモール: ${shoppingMalls}
             - ジム: ${gyms}

@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/_shadcn/ui/card'
 import { Home } from '@/model/home'
-import { MapPin, HomeIcon, DollarSign, LayoutGrid, Calendar, Map } from 'lucide-react'
+import { MapPin, HomeIcon, DollarSign, LayoutGrid, Calendar, Map, Bus } from 'lucide-react'
 
 type Props = {
   home: Home | null
@@ -79,6 +79,14 @@ export function HomeDescription({ home, placesData }: Props) {
               <div className="flex items-center gap-2 text-gray-700">
                 <HomeIcon className="w-5 h-5 text-red-500" />
                 <span className="font-medium">{home.building}</span>
+              </div>
+              <div className="flex flex-col items-start gap-2 text-gray-700 mt-3">
+                {home.station_list.split(",").map((station, index) => (
+                  <div key={index} className={`flex items-center gap-2 ${index !== 0 ? "pl-7" : ""}`}>
+                    {index === 0 && <Bus className="w-5 h-5 text-red-500" />} {/* 最初の行のみアイコンを表示 */}
+                    <span className="font-medium">{station.trim()}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

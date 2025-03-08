@@ -47,6 +47,7 @@ export function FetchContainer({ id }: Props) {
         <>
           <HomeDescription home={home} placesData={placesApiResponse} />
           <AiAdvise aiResponse={JSON.parse(aiResponse)} />
+          <div style={{ marginBottom: "40px" }} /> {/* 余白を追加 */}
         </>
       )}
     </>
