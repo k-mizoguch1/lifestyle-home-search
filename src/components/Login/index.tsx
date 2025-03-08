@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -11,27 +11,29 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
-
+  
       if (!response.ok) {
-        throw new Error("ログインに失敗しました。");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "ログインに失敗しました。");
       }
-
+  
       const data = await response.json();
       localStorage.setItem("token", data.token);
-      router.push("http://localhost:3001");
+      router.push("/");
     } catch (err) {
       setError((err as Error).message);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-800 to-purple-800">
@@ -41,11 +43,11 @@ const Login = () => {
         
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-blue-900">メールアドレス or たぐっとID</label>
+            <label className="block text-blue-900">ユーザネーム or たぐっとID</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-900 focus:outline-none"
               required
             />
