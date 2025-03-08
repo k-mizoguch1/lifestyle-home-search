@@ -19,11 +19,11 @@ export function HomeCard({ home }: Props) {
       <CardContent className="">
         <div className="flex gap-10">
           <Image 
-            alt="物件外観" 
-            src={home.photo_url} 
+            alt="物件外観"
+            src={home.photo_url}
             width={200} 
-            height={200}
-            layout="intrinsic"
+            height={100}
+            style={{ objectFit: 'cover' }} // 枠内で比率を維持
           />
           <Table className="bg-white border border-gray-300">
             <TableBody>
