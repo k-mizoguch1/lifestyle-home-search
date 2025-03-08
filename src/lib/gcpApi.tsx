@@ -6,6 +6,14 @@ const API_KEY = process.env.GCP_API_KEY;
 // 検索対象の施設の種類
 const PLACE_TYPES = ["hotel", "supermarket", "shopping_mall", "gym", "drugstore", "restaurant", "park", "school"];
 
+// 施設の型定義
+interface Place {
+  displayName?: { text: string };
+  types?: string[];
+  formattedAddress?: string;
+  location?: { latitude: number; longitude: number };
+}
+
 // 住所から緯度経度を取得する関数
 export const getGeocode = async (address: string) => {
   try {
@@ -59,7 +67,7 @@ export const searchNearbyPlaces = async (latitude: number, longitude: number, ra
       const structuredPlaces: Record<string, any[]> = {};
       PLACE_TYPES.forEach(type => structuredPlaces[type] = []);
 
-      places.forEach(place => {
+      places.forEach((place: Place) => {
         // `place.types` に `PLACE_TYPES` のどれかが含まれているかチェック
         const matchedTypes = PLACE_TYPES.filter(type => place.types?.includes(type));
 
