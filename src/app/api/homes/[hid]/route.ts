@@ -72,7 +72,7 @@ export async function GET(
           role: 'user',
           content: `物件情報:\n
             - 物件名: ${home.name}
-            - 所在地: ${home.prefecture} ${home.city}
+            - 所在地: ${home.location}
             - 家賃: ${home.rent}円
             - 間取り: ${home.layout}
             - 築年数: ${home.year}年
