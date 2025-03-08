@@ -12,6 +12,7 @@ type Props = {
 
 export function FetchContainer({ id }: Props) {
   const [home, setHome] = useState<Home | null>(null)
+  const [placesApiResponse, setPlacesApiResponse] = useState<Record<string, string[]>>({})
   const [aiResponse, setAiResponse] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -25,6 +26,7 @@ export function FetchContainer({ id }: Props) {
 
         if (res.status === 200) {
           setHome(resJson.home)
+          setPlacesApiResponse(resJson.placesData)
           setAiResponse(resJson.aiResponse)
         }
         setLoading(false)
@@ -43,8 +45,9 @@ export function FetchContainer({ id }: Props) {
         <Loading loading={true} />
       ) : (
         <>
-          <HomeDescription home={home} />
-          <AiAdvise aiResponse={aiResponse} />
+          <HomeDescription home={home} placesData={placesApiResponse} />
+          <AiAdvise aiResponse={JSON.parse(aiResponse)} />
+          <div style={{ marginBottom: "40px" }} /> {/* 余白を追加 */}
         </>
       )}
     </>
