@@ -14,7 +14,7 @@ type Props = {
   placesData: Record<string, string[]> // 追加: 周辺施設情報
 }
 
-const PLACE_TYPES = {
+const PLACE_TYPES: Partial<Record<string, string>> = {
   supermarket: 'スーパーマーケット',
   shopping_mall: 'ショッピングモール',
   gym: 'ジム',
@@ -23,7 +23,8 @@ const PLACE_TYPES = {
   park: '公園',
   hotel: 'ホテル',
   school: '学校',
-}
+};
+
 
 export function HomeDescription({ home, placesData }: Props) {
   if (!home) {
