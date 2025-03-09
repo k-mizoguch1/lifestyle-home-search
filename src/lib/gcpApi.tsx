@@ -37,7 +37,7 @@ export const getGeocode = async (address: string) => {
 };
 
 // 周辺施設を検索し、カテゴリ別に分類する関数
-export const searchNearbyPlaces = async (latitude: number, longitude: number, radius: number = 500, maxResults: number = 10) => {
+export const searchNearbyPlaces = async (latitude: number, longitude: number, radius: number = 1000, maxResults: number = 10) => {
   const url = "https://places.googleapis.com/v1/places:searchNearby";
 
   const headers = {
@@ -49,6 +49,7 @@ export const searchNearbyPlaces = async (latitude: number, longitude: number, ra
   const data = {
     includedTypes: PLACE_TYPES, // 指定した施設タイプ
     maxResultCount: maxResults,
+    languageCode: "ja", // 日本語で取得
     locationRestriction: {
       circle: {
         center: { latitude, longitude },

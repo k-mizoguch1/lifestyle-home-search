@@ -1,13 +1,28 @@
 "use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import Image from 'next/image'
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
   let fadeOutTimeout: NodeJS.Timeout;
+
+  // ログイン状態を確認
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // トークン削除
+    setIsLoggedIn(false); // 状態更新
+    router.push("/login"); // ログインページへリダイレクト
+  };
 
   const handleMouseEnter = () => {
     setMenuOpen(true);
@@ -31,28 +46,32 @@ export function Header() {
         </div>
       </Link>
       <div className="flex items-center gap-4 relative">
-        <Link href="/loginlogin">
-          <button className="bg-yellow-400 text-gray-800 px-4 py-2 rounded-lg hover:bg-yellow-500 transition">
-            Login
-          </button>
-        </Link>
-        <div 
+        <div
           className="relative"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <button className="text-white text-2xl">
-            &#9776;
-          </button>
+          <button className="text-white text-2xl">&#9776;</button>
           {menuOpen && (
-            <div 
-              className={`absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden transition-opacity duration-500 ease-in-out ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
+            <div
+              className={`absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden transition-opacity duration-500 ease-in-out ${
+                fadeOut ? "opacity-0" : "opacity-100"
+              }`}
             >
-              <Link href="/login">
-                <div className="flex items-center gap-2 px-4 py-3 border-b cursor-pointer hover:bg-gray-100">
-                  <span>ログイン</span>
+              {isLoggedIn ? (
+                <div
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-3 border-b cursor-pointer hover:bg-gray-100"
+                >
+                  <span>ログアウト</span>
                 </div>
-              </Link>
+              ) : (
+                <Link href="/login">
+                  <div className="flex items-center gap-2 px-4 py-3 border-b cursor-pointer hover:bg-gray-100">
+                    <span>ログイン</span>
+                  </div>
+                </Link>
+              )}
               <Link href="/favorites">
                 <div className="flex items-center gap-2 px-4 py-3 border-b cursor-pointer hover:bg-gray-100">
                   <span>お気に入りの物件</span>
